@@ -12,9 +12,9 @@
 // *game_status);
 
 int main(void) {
-  char control_button = '\0';
-  // int *ball_x = 0, *ball_y = 0;
-  // int *racket_left = 0, *racket_right = 0;
+  int control_button = '\0';
+  int ball_x = 24, ball_y = 7;
+  int racket_left = 8, racket_right = 12;
 
   int display_size_x = 0, display_size_y = 0;
 
@@ -22,7 +22,7 @@ int main(void) {
   int score[2] = {0};
   // char players_name[2] = {0};
 
-  int game_status = 99;
+  int game_status = 0;
   /*
   Game status:
    99 - display error
@@ -32,23 +32,33 @@ int main(void) {
     3 - hall of fame
     4 - settings
     5 - about
+    100 - exit
  */
 
   // ncurses initialization & setup
   initscr();
+  keypad(stdscr, TRUE);
   curs_set(0); // hide cursor
   noecho();
 
-  while (control_button != 'q') {
-    
+  do {
+    refresh();
+
+    getmaxyx(stdscr, display_size_y, display_size_x);
+
+    while (display_size_y < FIELD_Y && display_size_x < FIELD_X) {
       measureDisplaySize(&display_size_x, &display_size_y, &game_status);
-      if (game_status != 99) {
-      drawBorder(display_size_x, display_size_y, score);
-      }
-    control_button = getch();
-  }
+      refresh();
+    }
+    if (game_status == 0) {
+      drawMenu(display_size_x, display_size_y, &game_status, control_button);
+    }
+    if (game_status == 2) {
+      drawField(display_size_x, display_size_y, score, racket_left,
+                racket_right, ball_x, ball_y);
+    }
+  } while ((control_button = getch()) != 'q');
+  
   endwin();
   return 0;
 }
-
-
