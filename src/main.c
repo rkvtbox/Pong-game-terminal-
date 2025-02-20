@@ -1,4 +1,5 @@
 #include "../my_libs/display.h"
+#include "../my_libs/pong_logics.h"
 
 #include <ncurses.h>
 #include <stdio.h>
@@ -37,15 +38,18 @@ int main(void) {
 
   // ncurses initialization & setup
   initscr();
-  keypad(stdscr, TRUE);
+  keypad(stdscr, TRUE); // read special keys
   curs_set(0); // hide cursor
   noecho();
+  //nodelay(stdscr, TRUE); 
+  halfdelay(1);
 
   do {
-    refresh();
-
+    
+    control_button = getch();
+    
     getmaxyx(stdscr, display_size_y, display_size_x);
-
+    
     while (display_size_y < FIELD_Y && display_size_x < FIELD_X) {
       measureDisplaySize(&display_size_x, &display_size_y, &game_status);
       refresh();
@@ -53,11 +57,20 @@ int main(void) {
     if (game_status == 0) {
       drawMenu(display_size_x, display_size_y, &game_status, control_button);
     }
+
     if (game_status == 2) {
       drawField(display_size_x, display_size_y, score, racket_left,
                 racket_right, ball_x, ball_y);
+                
+      racketControl(&racket_left, &racket_right, control_button);
+      
+      if (control_button == 'q') {
+        game_status = 0;
+      }
     }
-  } while ((control_button = getch()) != 'q');
+    
+    refresh();
+  } while (game_status != 100);
   
   endwin();
   return 0;

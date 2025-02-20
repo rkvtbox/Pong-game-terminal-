@@ -23,9 +23,13 @@ void measureDisplaySize(int *display_size_x, int *display_size_y,
 
 void drawField(int display_size_x, int display_size_y, int *score,
                int racket_left, int racket_right, int ball_x, int ball_y) {
+                clear();
   int border_left = display_size_x / 2 - FIELD_X / 2;
   int border_top = display_size_y / 2 - FIELD_Y / 2;
 
+  printw("%d", racket_left);
+  
+   
   for (int y = 0; y < FIELD_Y; y++) {
     for (int x = 0; x < FIELD_X; x++) {
       move(border_top + y, border_left + x);
@@ -54,7 +58,7 @@ void drawField(int display_size_x, int display_size_y, int *score,
   printw(" %d ", score[0]);
   move(border_top, border_left + 67);
   printw(" %d ", score[1]);
-  refresh();
+  
 }
 
 void drawMenu(int display_size_x, int display_size_y, int *game_status,
@@ -66,19 +70,19 @@ void drawMenu(int display_size_x, int display_size_y, int *game_status,
 
   if (control_button == KEY_DOWN) {
     if (menu_navigation_status == 4) {
-        menu_navigation_status = 0;
+      menu_navigation_status = 0;
     } else {
-        menu_navigation_status++;
+      menu_navigation_status++;
     }
-} else if (control_button == KEY_UP) {
+  } else if (control_button == KEY_UP) {
     if (menu_navigation_status == 0) {
-        menu_navigation_status = 4;
+      menu_navigation_status = 4;
     } else {
-        menu_navigation_status--;
+      menu_navigation_status--;
     }
-}
+  }
 
-  printw("%d",menu_navigation_status);
+  printw("%d", menu_navigation_status);
 
   for (int y = 0; y < FIELD_Y; y++) {
     for (int x = 0; x < FIELD_X; x++) {
@@ -91,23 +95,48 @@ void drawMenu(int display_size_x, int display_size_y, int *game_status,
     }
   }
 
-printw("%d", *game_status);
+  
 
   move(border_top + 17, border_left + 30);
-  printw(menu_navigation_status == 0 ? ">  START GAME  <  " : "   START GAME  ");
+  if (menu_navigation_status == 0) {
+    printw(">  START GAME  <");
+    if (menu_navigation_status == 0 && control_button == '\n') {
+      *game_status = 2;
+    }
+  } else {
+    printw("   START GAME  ");
+  }
 
   move(border_top + 18, border_left + 26);
-  printw(menu_navigation_status == 1 ? ">  Enter Players Names  <" : "   Enter Players Names ");
+  if (menu_navigation_status == 1) {
+    printw(">  Enter Players Names  <");
+  } else {
+    printw("   Enter Players Names ");
+  }
 
   move(border_top + 19, border_left + 29);
-  printw(menu_navigation_status == 2 ? ">  Hall of Fame  <" : "   Hall of Fame");
+  if (menu_navigation_status == 2) {
+    printw(">  Hall of Fame  <");
+  } else {
+    printw("   Hall of Fame");
+  }
 
   move(border_top + 20, border_left + 30);
-  printw(menu_navigation_status == 3 ? ">  About Game  <" : "   About Game");
+  if (menu_navigation_status == 3) {
+    printw(">  About Game  <");
+  } else {
+    printw("   About Game");
+  }
 
   move(border_top + 21, border_left + 33);
-  printw(menu_navigation_status == 4 ? ">  Exit  <" : "   Exit");
-    
-  
+  if (menu_navigation_status == 4) {
+    printw(">  Exit  <");
+    if (control_button == '\n') {
+      *game_status = 100;
+    }
+  } else {
+    printw("   Exit");
+  }
+
   refresh();
 }
