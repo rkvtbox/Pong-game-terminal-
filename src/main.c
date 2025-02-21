@@ -14,7 +14,8 @@
 
 int main(void) {
   int control_button = '\0';
-  int ball_x = 24, ball_y = 7;
+  int ball_x = 75, ball_y = 15;
+  int ball_direction = 5;
   int racket_left = 8, racket_right = 12;
 
   int display_size_x = 0, display_size_y = 0;
@@ -59,18 +60,26 @@ int main(void) {
     }
 
     if (game_status == 2) {
+      printw("%d %d", ball_x, ball_y);
       drawField(display_size_x, display_size_y, score, racket_left,
                 racket_right, ball_x, ball_y);
                 
       racketControl(&racket_left, &racket_right, control_button);
+      ballControl(&ball_x, &ball_y, &ball_direction, racket_left, racket_right, score);
       
       if (control_button == 'q') {
         game_status = 0;
+      } 
+
+      if (game_status == 0) {
+        ball_x = 40;
+        ball_y = 13;
       }
     }
     
     refresh();
   } while (game_status != 100);
+  
   
   endwin();
   return 0;
