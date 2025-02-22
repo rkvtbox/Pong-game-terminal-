@@ -1,7 +1,24 @@
 #include <ncurses.h>
 
+
 #define FIELD_Y 25 // middle at 40
 #define FIELD_X 83 // middle at 13
+
+void drawBorder(int display_size_x, int display_size_y) {
+  int border_left = display_size_x / 2 - FIELD_X / 2;
+  int border_top = display_size_y / 2 - FIELD_Y / 2;
+
+  for (int y = 0; y < FIELD_Y; y++) {
+    for (int x = 0; x < FIELD_X; x++) {
+      move(border_top + y, border_left + x);
+      if ((y == 24 || y == 0) && x % 2 == 0) {
+        printw("*");
+      } else if (x == 0 || x == FIELD_X - 1) {
+        printw("*");
+      }
+    }
+  }
+}
 
 void measureDisplaySize(int *display_size_x, int *display_size_y,
                         int *game_status) {
@@ -23,21 +40,24 @@ void measureDisplaySize(int *display_size_x, int *display_size_y,
 
 void drawField(int display_size_x, int display_size_y, int *score,
                int racket_left, int racket_right, int ball_x, int ball_y) {
-                clear();
+  clear();
+  // calculate left top corner of border
   int border_left = display_size_x / 2 - FIELD_X / 2;
   int border_top = display_size_y / 2 - FIELD_Y / 2;
 
-  printw("%d %d", ball_x, ball_y);
-  printw("%d", racket_left);
-   
+  drawBorder(display_size_x, display_size_y);
+
+  // left and rigt players score  
+  move(border_top -1, border_left);
+  printw("  %d", score[0]); 
+  move(border_top -1, border_left+78);
+  printw("  %d", score[1]); 
+
   for (int y = 0; y < FIELD_Y; y++) {
     for (int x = 0; x < FIELD_X; x++) {
       move(border_top + y, border_left + x);
-      if (y == 24 || y == 0) {
-        printw("#");
-      } else if (x == 0 || x == FIELD_X - 1) {
-        printw("#");
-      } else if (y != 0 && y != FIELD_Y && x == 41) {
+
+      if (y != 0 && y != FIELD_Y-1 && x == 41) {
         printw("|");
       } else if ((y == racket_left || y == racket_left - 1 ||
                   y == racket_left - 2) &&
@@ -47,19 +67,12 @@ void drawField(int display_size_x, int display_size_y, int *score,
                   y == racket_right - 2) &&
                  x == FIELD_X - 3) {
         printw("|");
-
-      } 
+      }
       if (y == ball_y && x == ball_x) {
         printw("o");
       }
     }
   }
-
-  move(border_top, border_left + 10);
-  printw(" %d ", score[0]);
-  move(border_top, border_left + 67);
-  printw(" %d ", score[1]);
-  
 }
 
 void drawMenu(int display_size_x, int display_size_y, int *game_status,
@@ -83,20 +96,7 @@ void drawMenu(int display_size_x, int display_size_y, int *game_status,
     }
   }
 
-  printw("%d", menu_navigation_status);
-
-  for (int y = 0; y < FIELD_Y; y++) {
-    for (int x = 0; x < FIELD_X; x++) {
-      move(border_top + y, border_left + x);
-      if (y == 24 || y == 0) {
-        printw("*");
-      } else if (x == 0 || x == FIELD_X - 1) {
-        printw("*");
-      }
-    }
-  }
-
-  
+  drawBorder(display_size_x, display_size_y);
 
   move(border_top + 17, border_left + 30);
   if (menu_navigation_status == 0) {
@@ -137,6 +137,23 @@ void drawMenu(int display_size_x, int display_size_y, int *game_status,
     }
   } else {
     printw("   Exit");
+  }
+
+  refresh();
+}
+
+void drawEndRound (int *score, int display_size_x, int display_size_y) {
+  clear ();
+  drawBorder(display_size_x, display_size_y);
+
+  int border_left = display_size_x / 2 - FIELD_X / 2;
+  int border_top = display_size_y / 2 - FIELD_Y / 2;
+
+  move(border_top + 13, border_left + 30);
+  if (score[0] == 21) {
+  printw("Left Player win");
+  } else if (score[1] == 21) {
+    printw("Right Player Win");
   }
 
   refresh();

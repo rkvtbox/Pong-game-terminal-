@@ -17,11 +17,12 @@ int main(void) {
   int ball_x = 75, ball_y = 15;
   int ball_direction = 5;
   int racket_left = 8, racket_right = 12;
-
+  
   int display_size_x = 0, display_size_y = 0;
 
   // score and players_name- array of two elements 0 - left, 1 - right
-  int score[2] = {0};
+  int score[2] = {18, 19};
+  //int score_max = 21;
   // char players_name[2] = {0};
 
   int game_status = 0;
@@ -60,12 +61,21 @@ int main(void) {
     }
 
     if (game_status == 2) {
-      printw("%d %d", ball_x, ball_y);
+      
       drawField(display_size_x, display_size_y, score, racket_left,
                 racket_right, ball_x, ball_y);
                 
       racketControl(&racket_left, &racket_right, control_button);
       ballControl(&ball_x, &ball_y, &ball_direction, racket_left, racket_right, score);
+
+      if (score[0] == 21 || score[1] == 21) {
+        drawEndRound (score, display_size_x, display_size_y);
+        sleep(3);
+        score[0] = 0;
+        score[1] = 0;
+        game_status = 0;
+        
+      }
       
       if (control_button == 'q') {
         game_status = 0;
@@ -76,7 +86,7 @@ int main(void) {
         ball_y = 13;
       }
     }
-    sleep(0.6);
+    
     refresh();
   } while (game_status != 100);
   

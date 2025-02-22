@@ -17,14 +17,14 @@ void ballControl(int *ball_x, int *ball_y, int *ball_direction, int racket_left,
                  int racket_right, int *score) {
 
   if (*ball_x == 1 || *ball_x == 2) {
-    score[0]++;
+    score[1]++;
     *ball_x = 41;
     *ball_y = 13;
     *ball_direction = -2;
   }
 
   if (*ball_x == 81 || *ball_x == 82) {
-    score[1]++;
+    score[0]++;
     *ball_x = 10;
     *ball_y = 13;
     *ball_direction = 4;
