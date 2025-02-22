@@ -27,8 +27,8 @@ void drawField(int display_size_x, int display_size_y, int *score,
   int border_left = display_size_x / 2 - FIELD_X / 2;
   int border_top = display_size_y / 2 - FIELD_Y / 2;
 
+  printw("%d %d", ball_x, ball_y);
   printw("%d", racket_left);
-  
    
   for (int y = 0; y < FIELD_Y; y++) {
     for (int x = 0; x < FIELD_X; x++) {

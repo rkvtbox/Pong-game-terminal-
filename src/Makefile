@@ -16,3 +16,6 @@ rebuild: clear rebuild
 
 clean:
 	rm -f ../build/*.o $(BIN)
+
+
+	
