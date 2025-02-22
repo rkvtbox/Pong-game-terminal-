@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define FIELD_Y 25 // middle at 40
-#define FIELD_X 81 // middle at 13
+#define FIELD_X 84 // middle at 13
 
 // void measureDisplaySize(int *display_size_x, int *display_size_y, int
 // *game_status);
@@ -76,7 +76,7 @@ int main(void) {
         ball_y = 13;
       }
     }
-    
+    sleep(0.6);
     refresh();
   } while (game_status != 100);
   

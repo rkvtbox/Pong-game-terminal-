@@ -48,7 +48,8 @@ void drawField(int display_size_x, int display_size_y, int *score,
                  x == FIELD_X - 3) {
         printw("|");
 
-      } else if (y == ball_y && x == ball_x) {
+      } 
+      if (y == ball_y && x == ball_x) {
         printw("o");
       }
     }
